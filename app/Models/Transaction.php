@@ -69,8 +69,10 @@ class Transaction extends Model implements MoneyInterface
                 ->orWhere('binded_address', 'like', '%' . $search . '%')
                 ->orWhere('amount', 'like', '%' . $search . '%')
                 ->orWhere('converted_amount', 'like', '%' . $search . '%')
-                ->orWhereHas('account.user.info', function (Builder $query) use ($search) {
-                    $query->search($search);
+                ->orWhereHas('account', function (Builder $query) use ($search) {
+                    $query->orWhereHas('user', function (Builder $query) use ($search) {
+                        $query->search($search);
+                    });
                 });
         })
             ->when($filters['type'] ?? null, function ($query, $type) {
