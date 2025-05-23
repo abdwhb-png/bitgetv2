@@ -67,8 +67,7 @@ class OrdersController extends BaseController
             'canEditOrder' => $user->can(PermissionsEnum::EDITORDERS->value),
             'totalCount' => $query->count(),
             'openedCount' => $query->whereNull('closed_at')->count(),
-            'orders' => $query->filter($filters)
-                ->latest()
+            'orders' => $query->latest()->filter($filters)
                 ->paginate($this->itemsPerPage(20))
                 ->withQueryString()
                 ->through(fn($item) => $this->getParsedOrder($item)),

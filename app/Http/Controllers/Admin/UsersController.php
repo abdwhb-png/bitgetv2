@@ -78,7 +78,7 @@ class UsersController extends BaseController
     public function get()
     {
         $user = Auth::user();
-        $query = User::where('id', '!=', Auth::id())->role(RolesEnum::USER->value);
+        $query = User::role(RolesEnum::USER->value);
 
         return [
             'filters' => FacadesRequest::all('search', 'sort'),

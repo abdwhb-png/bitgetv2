@@ -132,7 +132,7 @@ const items = ref([
         },
     },
     {
-        label: "User Website",
+        label: "Frontend",
         icon: "pi pi-external-link",
         command: () => {
             window.open(route("app.home"), "_blank");
@@ -143,6 +143,13 @@ const items = ref([
         icon: "pi pi-user",
         command: () => {
             aboutMe.value = true;
+        },
+    },
+    {
+        label: "Telescope",
+        icon: "pi pi-eye",
+        command: () => {
+            window.open("/telescope", "_blank");
         },
     },
     {

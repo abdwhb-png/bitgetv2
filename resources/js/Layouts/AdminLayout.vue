@@ -29,21 +29,17 @@
 </style>
 
 <script setup>
-import { ref, provide, onBeforeMount, computed } from "vue";
-import { Head, Link, router, usePage } from "@inertiajs/vue3";
+import { ref, onBeforeMount, computed } from "vue";
+import { Head, Link, usePage } from "@inertiajs/vue3";
 import { useUserStore } from "@/stores/user";
 import { useAdminStore } from "@/stores/admin";
 import { usePusher } from "@/composables/usePusher";
-import { copyToClipboard } from "@/utils/helpers";
 import { useToast } from "primevue/usetoast";
 
 // Components
 import ApplicationMark from "@/Components/Admin/ApplicationMark.vue";
 import Banner from "@/Components/Admin/Banner.vue";
 import SpeedDial from "@/Components/Admin/SpeedDial.vue";
-import Dropdown from "@/Components/Admin/Dropdown.vue";
-import DropdownLink from "@/Components/Admin/DropdownLink.vue";
-import NavLink from "@/Components/Admin/NavLink.vue";
 import ResponsiveNavLink from "@/Components/Admin/ResponsiveNavLink.vue";
 import AdminNavigation from "@/Components/Admin/Layout/Navigation.vue";
 import AdminResponsiveNavigation from "@/Components/Admin/Layout/ResponsiveNavigation.vue";
@@ -106,7 +102,7 @@ const navLinks = [
         name: "notifications",
         title: "Notifications",
         icon: "pi pi-bell",
-        route: page.props.routePrefix + "dashboard",
+        route: page.props.routePrefix + "notifications",
     },
 ];
 
