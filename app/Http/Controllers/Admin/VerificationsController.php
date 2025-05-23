@@ -46,7 +46,7 @@ class VerificationsController extends BaseController
             ],
             'verifications' => [
                 'emails' => User::role(RolesEnum::USER->value)->latest()
-                    ->paginate($this->itemsPerPage(20))
+                    ->paginate(perPage: $this->itemsPerPage(20), pageName: 'emails')
                     ->withQueryString()
                     ->through(function ($user) {
                         return [
@@ -60,7 +60,7 @@ class VerificationsController extends BaseController
                         ];
                     }),
                 'kycs' => KYC::latest()
-                    ->paginate($this->itemsPerPage(20))
+                    ->paginate(perPage: $this->itemsPerPage(20), pageName: 'kycs')
                     ->withQueryString()
                     ->through(function ($kyc) {
                         return [
