@@ -28,7 +28,8 @@ class UsersController extends BaseController
         });
 
         if (!$result->count()) {
-            throw new \Exception('status not found');
+            return ['label' => 'unknown', 'value' => 'unknown'];
+            // throw new \Exception('status not found');
         }
 
         return $result->first();
