@@ -25,6 +25,22 @@ class BaseController extends Controller
         return $this->request->input('page', $default);
     }
 
+    protected function getStatuses($search): array
+    {
+        $statuses = collect(config('vars.statuses', []));
+
+        $result = $statuses->filter(function ($status) use ($search) {
+            return $status['label'] === $search || $status['value'] === $search;
+        });
+
+        if (!$result->count()) {
+            return ['label' => 'unknown', 'value' => 'unknown'];
+            // throw new \Exception('status not found');
+        }
+
+        return $result->first();
+    }
+
     public function getAccountAsset(string $search): array
     {
         $user = request()->user();
