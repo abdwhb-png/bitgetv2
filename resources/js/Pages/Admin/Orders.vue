@@ -2,14 +2,7 @@
 import { ref, computed, onMounted } from "vue";
 import { Link, usePage, useForm } from "@inertiajs/vue3";
 import { useToast } from "primevue/usetoast";
-import {
-    getSeverity,
-    getFilters,
-    rowsPerPage,
-    parseStatuses,
-    pt,
-    scrollHeight,
-} from "@/utils/dataTable";
+import { getSeverity, getFilters, parseStatuses } from "@/utils/dataTable";
 import CustomDataTable from "@/Components/Admin/Common/CustomDataTable.vue";
 
 const page = usePage();

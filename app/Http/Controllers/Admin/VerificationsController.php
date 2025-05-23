@@ -5,11 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Models\KYC;
 use App\Models\User;
 use Inertia\Inertia;
+use App\Enums\RolesEnum;
 use Illuminate\Http\Request;
 use App\Enums\PermissionsEnum;
-use App\Http\Controllers\BaseController;
-use App\Concerns\ValidationRulesTrait;
 use Illuminate\Support\Facades\Auth;
+use App\Concerns\ValidationRulesTrait;
+use App\Http\Controllers\BaseController;
 use Illuminate\Support\Facades\Request as FacadesRequest;
 
 class VerificationsController extends BaseController
@@ -38,7 +39,7 @@ class VerificationsController extends BaseController
     public function get()
     {
         $user = Auth::user();
-        $emailsQuery = User::role('user');
+        $emailsQuery = User::role(RolesEnum::USER->value);
         $kycsQuery = KYC::query();
 
         return [
@@ -53,35 +54,43 @@ class VerificationsController extends BaseController
                 'emails' => $emailsQuery->count(),
                 'kycs' => $kycsQuery->count(),
             ],
-            'emails' => $emailsQuery->paginate($this->itemsPerPage(20))
-                ->withQueryString()
-                ->through(function ($user) {
-                    return [
-                        'id' => $user->id,
-                        'status' => $this->getStatuses($user->isVerified()['email'])['label'],
-                        'detail' => [
-                            'user' => $user->info->fullName(),
-                            'email' => $user->email,
-                            'email_verified_at' => $user->email_verified_at !== null ? $user->email_verified_at->format('Y-m-d H:i:s') : null,
-                        ],
-                    ];
-                }),
-            'kycs' => $kycsQuery->paginate($this->itemsPerPage(20))
-                ->withQueryString()
-                ->through(function ($kyc) {
-                    return [
-                        'id' => $kyc->id,
-                        'status' => $this->getStatuses($kyc->status)['label'],
-                        'detail' => [
-                            'user' => $kyc->user ? $kyc->user->info->fullName() : 'unknown',
-                            'id_type' => $kyc->id_type,
-                            'id_is_issued_by' => $kyc->issued_by,
-                            'file_url' => $kyc->file_url,
-                            'created_at' => $kyc->created_at->format('Y-m-d H:i:s'),
-                            'updated_at' => $kyc->updated_at->format('Y-m-d H:i:s'),
-                        ],
-                    ];
-                }),
+            'pendingCount' => [
+                'emails' => $emailsQuery->where('email_verified_at', null)->count(),
+                'kycs' => $kycsQuery->where('status', 0)->count(),
+            ],
+            'verifications' => [
+                'emails' => $emailsQuery->latest()
+                    ->paginate($this->itemsPerPage(20))
+                    ->withQueryString()
+                    ->through(function ($user) {
+                        return [
+                            'id' => $user->id,
+                            'status' => $this->getStatuses($user->isVerified()['email'])['label'],
+                            'detail' => [
+                                'user' => $user->info->fullName(),
+                                'email' => $user->email,
+                                'email_verified_at' => $user->email_verified_at !== null ? $user->email_verified_at->format('Y-m-d H:i:s') : null,
+                            ],
+                        ];
+                    }),
+                'kycs' => $kycsQuery->latest()
+                    ->paginate($this->itemsPerPage(20))
+                    ->withQueryString()
+                    ->through(function ($kyc) {
+                        return [
+                            'id' => $kyc->id,
+                            'status' => $this->getStatuses($kyc->status)['label'],
+                            'detail' => [
+                                'user' => $kyc->user ? $kyc->user->info->fullName() : 'unknown',
+                                'id_type' => $kyc->id_type,
+                                'id_is_issued_by' => $kyc->issued_by,
+                                'file_url' => $kyc->file_url,
+                                'created_at' => $kyc->created_at->format('Y-m-d H:i:s'),
+                                'updated_at' => $kyc->updated_at->format('Y-m-d H:i:s'),
+                            ],
+                        ];
+                    }),
+            ],
         ];
     }
 

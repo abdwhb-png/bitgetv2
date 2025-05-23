@@ -1,88 +1,45 @@
 <script setup>
 import { ref, computed } from "vue";
 import { Link, usePage } from "@inertiajs/vue3";
-import {
-    getSeverity,
-    getFilters,
-    rowsPerPage,
-    pt,
-    scrollHeight,
-} from "@/utils/dataTable";
+import { getSeverity, getFilters } from "@/utils/dataTable";
+import CustomDataTable from "@/Components/Admin/Common/CustomDataTable.vue";
 
 const props = defineProps({
     datas: Object,
-    loading: Boolean,
+    totalCount: Number,
+    unverifiedCount: Number,
 });
 
 const page = usePage();
-
-const dataLength = ref(props.datas?.length);
 
 const filters = ref(getFilters());
 const globalFilterFields = ref(
     page.props.siteConfig.globalFilterFields.verification.email
 );
 const statuses = ref(page.props.siteConfig.statuses.verification.email);
-
-const pendingCount = computed(() => {
-    return (
-        props.datas?.filter((item) => item.status == "unverified").length || 0
-    );
-});
 </script>
 <template>
-    <Toolbar class="m-2">
-        <template #start>
-            <h4 class="m-0 font-bold text-sky-500">{{ dataLength }} results</h4>
-        </template>
-
+    <Toolbar class="mb-2">
         <template #end>
             <OverlayBadge
-                :value="pendingCount.toString()"
-                :severity="pendingCount > 0 ? 'danger' : 'secondary'"
+                :value="unverifiedCount.toString()"
+                :severity="unverifiedCount > 0 ? 'danger' : 'secondary'"
             >
-                <Tag :severity="getSeverity('pending')">Pending</Tag>
+                <Tag :severity="getSeverity('pending')">Unverified</Tag>
             </OverlayBadge>
         </template>
     </Toolbar>
 
-    <DataTable
-        :loading="loading"
-        :value="props.datas"
-        dataKey="id"
-        v-model:filters="filters"
-        :globalFilterFields
-        @filter="dataLength = $event.filteredValue.length"
+    <CustomDataTable
+        title="Email verification list"
+        :paginated="datas"
+        :total="totalCount"
+        :data-filters="$page.props.filters"
+        filter-key="type"
+        :filters="filters"
         filterDisplay="row"
-        paginator
-        :rows="rowsPerPage[0] || 10"
-        :rowsPerPageOptions="rowsPerPage"
-        showGridlines
-        scrollable
-        :scrollHeight
-        :pt
+        :globalFilterFields="globalFilterFields"
     >
-        <template #empty> No email verifications found. </template>
-
-        <template #loading>
-            <span>Fetching email verifications data. Please wait.</span>
-        </template>
-
-        <template #header>
-            <div class="flex flex-wrap gap-2 items-center justify-end">
-                <IconField class="w-full md:w-2/3">
-                    <InputIcon>
-                        <i class="pi pi-search" />
-                    </InputIcon>
-                    <InputText
-                        fluid
-                        v-model="filters['global'].value"
-                        placeholder="Search by user, email, ..."
-                    />
-                </IconField>
-            </div>
-        </template>
-
         <Column
             field="status"
             header="Status"
@@ -149,5 +106,23 @@ const pendingCount = computed(() => {
                 </ul>
             </template>
         </Column>
-    </DataTable>
+    </CustomDataTable>
+
+    <!-- <DataTable
+        :loading="loading"
+        :value="props.datas"
+        dataKey="id"
+        v-model:filters="filters"
+        :globalFilterFields
+        @filter="dataLength = $event.filteredValue.length"
+        filterDisplay="row"
+        paginator
+        :rows="rowsPerPage[0] || 10"
+        :rowsPerPageOptions="rowsPerPage"
+        showGridlines
+        scrollable
+        :scrollHeight
+        :pt
+    >
+    </DataTable> -->
 </template>

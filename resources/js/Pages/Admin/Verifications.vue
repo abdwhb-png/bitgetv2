@@ -1,46 +1,37 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, computed } from "vue";
 import { usePage } from "@inertiajs/vue3";
-import { useToast } from "primevue/usetoast";
-import { useAdminStore } from "@/stores/admin";
 import Kycs from "@/Components/Admin/Verifications/Kycs.vue";
 import Emails from "@/Components/Admin/Verifications/Emails.vue";
 
 const page = usePage();
-const pageName = "Verifications";
-
-const toast = useToast();
-const adminStore = useAdminStore();
-const loading = ref(true);
-
-const verifications = ref([]);
+const verifications = computed(() => page.props.verifications || {});
+const totalCount = computed(() => page.props.totalCount || {});
+const pendingCount = computed(() => page.props.pendingCount || {});
 
 const tabValue = ref(
     localStorage.getItem("verificationsActiveTab") ?? "emails"
 );
 
-const changeTab = (value) => {
-    localStorage.setItem("verificationsActiveTab", value);
-    tabValue.value = value;
-};
+// Ensure tab value is valid
+const validTabs = computed(() => Object.keys(verifications.value));
+const isValidTab = computed(() => validTabs.value.includes(tabValue.value));
 
-onMounted(async () => {
-    await adminStore.fetchVerifications(toast);
-    verifications.value = adminStore.getData("verifications");
-    loading.value = adminStore.loading("verifications");
-});
+// Set default tab if current is invalid
+if (!isValidTab.value && validTabs.value.length > 0) {
+    tabValue.value = validTabs.value[0];
+}
+
+const changeTab = (value) => {
+    if (validTabs.value.includes(value)) {
+        localStorage.setItem("verificationsActiveTab", value);
+        tabValue.value = value;
+    }
+};
 </script>
 
 <template>
-    <AdminLayout :title="pageName">
-        <template #header>
-            <h2
-                class="font-semibold text-xl text-gray-800 dark:text-gray-400 leading-tight"
-            >
-                {{ pageName }}
-            </h2>
-        </template>
-
+    <AdminLayout title="Verifications">
         <ToastError :errors="page.props.errors" />
 
         <div class="py-12">
@@ -53,34 +44,39 @@ onMounted(async () => {
                     >
                         <TabList>
                             <Tab
-                                v-for="(item, index) in Object.keys(
-                                    verifications
-                                )"
+                                v-for="(item, index) in verifications"
                                 :key="index"
-                                :value="item"
+                                :value="index"
+                                class="capitalize"
                             >
-                                <span class="uppercase">{{ item }}</span>
+                                {{ index }}
                             </Tab>
                         </TabList>
-                        <TabPanels>
+                        <TabPanels v-if="Object.keys(verifications).length > 0">
                             <!-- emails verifications -->
-                            <TabPanel value="emails">
+                            <TabPanel
+                                value="emails"
+                                v-if="verifications.emails"
+                            >
                                 <Emails
-                                    :datas="
-                                        adminStore.data.verifications.emails
-                                    "
-                                    :loading
+                                    :datas="verifications.emails"
+                                    :totalCount="totalCount.emails || 0"
+                                    :unverifiedCount="pendingCount.emails || 0"
                                 />
                             </TabPanel>
 
                             <!-- kycs verifications -->
-                            <TabPanel value="kycs">
+                            <TabPanel value="kycs" v-if="verifications.kycs">
                                 <Kycs
-                                    :datas="adminStore.data.verifications.kycs"
-                                    :loading
+                                    :datas="verifications.kycs"
+                                    :totalCount="totalCount.kycs || 0"
+                                    :unverifiedCount="pendingCount.kycs || 0"
                                 />
                             </TabPanel>
                         </TabPanels>
+                        <div v-else class="p-6 text-center text-gray-500">
+                            <p>No verification data available.</p>
+                        </div>
                     </Tabs>
                 </div>
             </div>

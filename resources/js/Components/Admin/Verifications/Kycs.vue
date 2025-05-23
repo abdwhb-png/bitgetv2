@@ -2,34 +2,23 @@
 import { ref, computed } from "vue";
 import { useForm, usePage, Link } from "@inertiajs/vue3";
 import { useToast } from "primevue/usetoast";
-import {
-    getSeverity,
-    rowsPerPage,
-    getFilters,
-    pt,
-    scrollHeight,
-} from "@/utils/dataTable";
+import { getSeverity, getFilters } from "@/utils/dataTable";
+import CustomDataTable from "@/Components/Admin/Common/CustomDataTable.vue";
 
 const props = defineProps({
     datas: Object,
-    loading: Boolean,
+    totalCount: Number,
+    unverifiedCount: Number,
 });
 
 const page = usePage();
-
 const toast = useToast();
 
-const dataLength = ref(props.datas?.length);
 const editingRows = ref([]);
-
 const filters = ref(getFilters());
 const globalFilterFields =
     page.props.siteConfig.globalFilterFields.verification.kyc;
 const statuses = page.props.siteConfig.statuses.verification.kyc;
-
-const pendingCount = computed(() => {
-    return props.datas?.filter((item) => item.status == "pending").length || 0;
-});
 
 const form = useForm({
     status: null,
@@ -43,7 +32,7 @@ const onRowEditSave = (event) => {
     form.transform((data) => ({
         status: newData.status,
         type: "kycs",
-    })).put(route("admin.verifications.update", newData.id), {
+    })).put(route(page.routePrefix + "verifications.update", newData.id), {
         onSuccess: () => {
             toast.add({
                 severity: "success",
@@ -60,62 +49,30 @@ const onRowEditSave = (event) => {
 </script>
 
 <template>
-    <Toolbar class="m-2">
-        <template #start>
-            <h4 class="m-0 font-bold text-sky-500">{{ dataLength }} results</h4>
-        </template>
-
+    <Toolbar class="mb-2">
         <template #end>
             <OverlayBadge
-                :value="pendingCount.toString()"
-                :severity="pendingCount > 0 ? 'danger' : 'secondary'"
+                :value="unverifiedCount.toString()"
+                :severity="unverifiedCount > 0 ? 'danger' : 'secondary'"
             >
-                <Tag :severity="getSeverity('pending')">Pending</Tag>
+                <Tag :severity="getSeverity('pending')">Unverified</Tag>
             </OverlayBadge>
         </template>
     </Toolbar>
 
-    <DataTable
-        :loading="loading || form.processing"
-        :value="props.datas"
-        dataKey="id"
+    <CustomDataTable
+        title="KYC verification list"
+        :paginated="datas"
+        :total="totalCount"
+        :data-filters="$page.props.filters"
+        filter-key="type"
+        :filters="filters"
+        filterDisplay="row"
+        :globalFilterFields="globalFilterFields"
         v-model:editingRows="editingRows"
         editMode="row"
         @row-edit-save="onRowEditSave"
-        v-model:filters="filters"
-        :globalFilterFields
-        @filter="dataLength = $event.filteredValue.length"
-        filterDisplay="row"
-        paginator
-        :rows="rowsPerPage[0] || 10"
-        :rowsPerPageOptions="rowsPerPage"
-        showGridlines
-        scrollable
-        :scrollHeight
-        :pt
     >
-        <template #empty> No kyc verifications found. </template>
-
-        <template #loading>
-            <span v-if="form.processing">Updating kyc...</span>
-            <span v-else>Fetching kyc verifications data. Please wait.</span>
-        </template>
-
-        <template #header>
-            <div class="flex flex-wrap gap-2 items-center justify-end">
-                <IconField class="w-full md:w-2/3">
-                    <InputIcon>
-                        <i class="pi pi-search" />
-                    </InputIcon>
-                    <InputText
-                        fluid
-                        v-model="filters['global'].value"
-                        placeholder="Search by user, ID type, ..."
-                    />
-                </IconField>
-            </div>
-        </template>
-
         <Column
             :rowEditor="page.props.canEditVerification"
             header="Edit"
@@ -216,5 +173,5 @@ const onRowEditSave = (event) => {
                 </ul>
             </template>
         </Column>
-    </DataTable>
+    </CustomDataTable>
 </template>

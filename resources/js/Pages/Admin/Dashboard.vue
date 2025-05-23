@@ -7,7 +7,6 @@ import PaymentMethods from "@/Components/Admin/Dashboard/PaymentMethods.vue";
 import PaymentProofs from "@/Components/Admin/Dashboard/PaymentProofs.vue";
 
 const page = usePage();
-const pageName = "Dashboard";
 
 const activeTab = ref(localStorage.getItem("dashboardActiveTab") ?? "pMethods");
 
@@ -18,15 +17,7 @@ const changeTab = (tab) => {
 </script>
 
 <template>
-    <AdminLayout :title="pageName">
-        <template #header>
-            <h2
-                class="font-semibold text-xl text-gray-800 dark:text-gray-400 leading-tight"
-            >
-                {{ pageName }}
-            </h2>
-        </template>
-
+    <AdminLayout title="Dashboard">
         <ToastError :errors="page.props.errors" />
 
         <div class="py-12">
