@@ -49,9 +49,10 @@ class TransactionsController extends BaseController
     {
         $user = Auth::user();
         $query = Transaction::query();
+        $filters = FacadesRequest::all('search', 'sort', 'type', 'status');
 
         return [
-            'filters' => FacadesRequest::all('search', 'sort', 'type', 'status'),
+            'filters' => $filters,
             'can' => [
                 'create_transaction' => $user->isSuperAdmin(),
                 'edit_transaction' => $user->isSuperAdmin(),
@@ -60,8 +61,8 @@ class TransactionsController extends BaseController
             'canEditTransaction' => $user->can(PermissionsEnum::EDITTRANSACTIONS->value),
             'totalCount' => $query->count(),
             'pendingCount' => $query->where('status', 'pending')->count(),
-            'transactions' => $query->latest()
-                ->filter(FacadesRequest::only('search', 'sort'))
+            'transactions' => Transaction::filter($filters)
+                ->latest()
                 ->paginate($this->itemsPerPage(20))
                 ->withQueryString()
                 ->through(fn($item) => $this->getParsedTrnasaction($item)),

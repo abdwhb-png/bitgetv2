@@ -47,10 +47,12 @@ class OrdersController extends BaseController
             ],
         ];
     }
+
     public function index()
     {
         return Inertia::render('Orders', $this->get());
     }
+
     public function get()
     {
         $user = Auth::user();
@@ -67,7 +69,7 @@ class OrdersController extends BaseController
             'canEditOrder' => $user->can(PermissionsEnum::EDITORDERS->value),
             'totalCount' => $query->count(),
             'openedCount' => $query->whereNull('closed_at')->count(),
-            'orders' => $query->filter($filters)
+            'orders' => Order::filter($filters)
                 ->latest()
                 ->paginate($this->itemsPerPage(20))
                 ->withQueryString()

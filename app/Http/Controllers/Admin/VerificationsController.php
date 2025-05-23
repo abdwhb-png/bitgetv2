@@ -59,7 +59,7 @@ class VerificationsController extends BaseController
                 'kycs' => $kycsQuery->where('status', 0)->count(),
             ],
             'verifications' => [
-                'emails' => $emailsQuery->latest()
+                'emails' => User::role(RolesEnum::USER->value)->latest()
                     ->paginate($this->itemsPerPage(20))
                     ->withQueryString()
                     ->through(function ($user) {
@@ -73,7 +73,7 @@ class VerificationsController extends BaseController
                             ],
                         ];
                     }),
-                'kycs' => $kycsQuery->latest()
+                'kycs' => KYC::latest()
                     ->paginate($this->itemsPerPage(20))
                     ->withQueryString()
                     ->through(function ($kyc) {
