@@ -1,0 +1,32 @@
+.underline {
+    text-decoration: underline;
+}
+
+.p-popover {
+    z-index: 5000 !important;
+}
+
+.img-avatar {
+    height: 20px;
+    width: 20px;
+}
+
+.primary-btn {
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 21px;
+    border-radius: 8px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 8px;
+}
+
+.primary-btn:hover,
+.primary-btn:active,
+.primary-btn:focus {
+    color: #25c866;
+}

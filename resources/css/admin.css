@@ -1,0 +1,41 @@
+@import "base.css";
+
+@layer components {
+    .list-group {
+        @apply w-auto font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white;
+    }
+    .list-group-item {
+        @apply w-full px-4 py-2 border-b border-gray-200 rounded-t-lg dark:border-gray-600 text-sm;
+    }
+    .p-toolbar {
+        @apply bg-gray-100 dark:bg-gray-900;
+    }
+}
+
+.p-toolbar {
+    background-color: #f3f4f6 !important; /* Surcharge avec !important */
+}
+
+.system-dark .p-toolbar {
+    background-color: #1a1a1a !important; /* Surcharge avec !important */
+}
+
+#speeddial {
+    position: fixed;
+    left: 20px;
+    top: calc(50% - 2rem);
+    z-index: 9999;
+}
+.p-speeddial-item .p-button-secondary {
+    background-color: lightgray;
+}
+.system-dark .p-speeddial-item .p-button-secondary {
+    background-color: gray;
+    color: white;
+}
+
+@media screen and (max-width: 768px) {
+    #speeddial {
+        top: calc(88% - 2rem);
+    }
+}

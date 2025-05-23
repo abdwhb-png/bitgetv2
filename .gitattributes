@@ -1,0 +1,22 @@
+
+# Indique à GitHub que PHP est le langage principal*.php linguist-language=PHP
+
+# Ignore les fichiers front-end ou JavaScript
+/public/js/* linguist-vendored
+/public_html/js/* linguist-vendored
+/resources/js/* linguist-vendored
+/node_modules/* linguist-vendored
+/public/css/* linguist-vendored
+/resources/css/* linguist-vendored
+
+* text=auto eol=lf
+
+*.blade.php diff=html
+*.css diff=css
+*.html diff=html
+*.md diff=markdown
+*.php diff=php
+
+/.github export-ignore
+CHANGELOG.md export-ignore
+.styleci.yml export-ignore

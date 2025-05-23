@@ -1,0 +1,44 @@
+[
+    {
+        "symbol": "BTCUSDT",
+        "base": "BTC",
+        "quote": "USDT",
+        "name": ""
+    },
+    {
+        "symbol": "ETHBTC",
+        "base": "ETH",
+        "quote": "BTC",
+        "name": "Ethereum"
+    },
+    {
+        "symbol": "USDTDAI",
+        "base": "USDT",
+        "quote": "DAI",
+        "name": "TetherUS"
+    },
+    {
+        "symbol": "SOLBTC",
+        "base": "SOL",
+        "quote": "BTC",
+        "name": "Solana"
+    },
+    {
+        "symbol": "XRPUSDT",
+        "base": "XRP",
+        "quote": "USDT",
+        "name": "XRP"
+    },
+    {
+        "symbol": "EOSBTC",
+        "base": "EOS",
+        "quote": "BTC",
+        "name": "EOS"
+    },
+    {
+        "symbol": "TRXETH",
+        "base": "TRX",
+        "quote": "ETH",
+        "name": "Tronix"
+    }
+]

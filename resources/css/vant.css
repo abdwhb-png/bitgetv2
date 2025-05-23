@@ -1,0 +1,23 @@
+.van-cell.van-field.van-field--label-center {
+    align-items: center;
+}
+.van-popup.van-toast {
+    width: fit-content;
+    max-width: 100%;
+}
+.van-popup.van-toast.van-toast--fail {
+    background-color: red;
+}
+.van-popup.van-toast.van-toast--success {
+    background-color: darkgreen;
+}
+.van-popup.van-popup--round.van-popup--bottom {
+    height: 70%;
+}
+@media screen and (min-width: 768px) {
+    .van-popup.van-popup--round.van-popup--bottom {
+        height: 80%;
+        width: 50%;
+        margin-left: 25%;
+    }
+}
