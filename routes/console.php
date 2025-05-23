@@ -15,6 +15,7 @@ Schedule::command(\Spatie\Health\Commands\RunHealthChecksCommand::class)->everyF
 
 Schedule::command("queue:work --stop-when-empty --queue=emails")->everyFiveMinutes();
 Schedule::command("queue:work --stop-when-empty")->everyThirtyMinutes();
+Schedule::command('telescope:prune --hours=48')->daily();
 
 Artisan::command('give:role {id} {role}', function ($id, $role) {
     $user = User::findOrfail($id);
