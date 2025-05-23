@@ -103,10 +103,10 @@ class Order extends Model implements MoneyInterface
         $query->when($filters['search'] ?? null, function ($query, $search) {
             $query->where('symbol', 'like', '%' . $search . '%')
                 ->orWhere('ref_id', 'like', '%' . $search . '%')
-                ->orWhere('type', 'like', '%' . $search . '%');
-            ->orWhereHas('account.user.info', function (Builder $query) use ($search) {
-                $query->search($search);
-            });
+                ->orWhere('type', 'like', '%' . $search . '%')
+                ->orWhereHas('account.user.info', function (Builder $query) use ($search) {
+                    $query->search($search);
+                });
         })
             ->when($filters['type'] ?? null, function ($query, $type) {
                 $query->whereHas('orderType', function (Builder $query) use ($type) {
