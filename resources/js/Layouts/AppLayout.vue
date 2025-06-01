@@ -198,7 +198,7 @@ export default {
         // cheeck if page need header
         hasHeader() {
             return this.bottomNavBarLinks.some((nav) => {
-                return route().current(this.page.props.routePrefix + nav.name);
+                return route().current(this.$routePrefix + nav.name);
             });
         },
 

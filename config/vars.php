@@ -1,7 +1,7 @@
 <?php
 return [
     'admin_subdomain' => 'admin.',
-    'app_subdomain' => 'app.',
+    'app_subdomain' => '',
 
     'identification_ids' => [
         'ID Card',

@@ -5,6 +5,10 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AppController;
 use Illuminate\Support\Facades\Storage;
 
+require_once __DIR__ . '/base.php';
+
+registerSharedRoutes(Route::getFacadeRoot());
+
 Route::middleware([
     'auth',
     config('jetstream.auth_session'),
@@ -58,5 +62,3 @@ Route::middleware([
     Route::put('/payment-proof', [AppController::class, 'paymentProof'])->name('payment-proof');
     Route::put('/swap', [AppController::class, 'swapStore'])->name('swap.store');
 });
-
-require_once __DIR__ . '/base.php';

@@ -23,8 +23,8 @@
         <template #title>
             {{ title }}
             <span class="text-sm font-normal">{{
-                `${paginated?.total || "0"} records displayed ${
-                    total ? `of ${total}` : ""
+                `${paginated?.total || "0"} results displayed ${
+                    total ? `of ${total} total records` : ""
                 }`
             }}</span>
         </template>

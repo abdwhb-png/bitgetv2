@@ -3,11 +3,21 @@ import { Head, Link, usePage } from "@inertiajs/vue3";
 import VerificationBadge from "@/Components/Application/VerificationBadge.vue";
 import { useUserStore } from "@/stores/user";
 import { copyToClipboard } from "@/utils/helpers";
+import { showSuccessToast } from "vant";
 
 const userStore = useUserStore();
 
 const page = usePage();
 const user = page.props.auth.user;
+
+async function changeMailNotif() {
+    await userStore.setMailNotif().then(() => {
+        showSuccessToast({
+            message: "Mail Notification Updated",
+            forbidClick: true,
+        });
+    });
+}
 </script>
 
 <template>
@@ -17,6 +27,24 @@ const user = page.props.auth.user;
         header-title="My Account"
     >
         <div class="pt-45 pb-16">
+            <!--Mail Notif -->
+            <ul class="bg-menuDark tf-container">
+                <li
+                    class="pt-12 pb-12 mt-4 d-flex justify-content-between align-items-center"
+                >
+                    <h5>Mail Notification</h5>
+                    <input
+                        class="tf-switch-check"
+                        type="checkbox"
+                        value="mail_notif"
+                        name="mail_notif"
+                        :checked="
+                            userStore.user?.account.mail == 1 ? true : false
+                        "
+                        @change="changeMailNotif"
+                    />
+                </li>
+            </ul>
             <div class="tf-container">
                 <a
                     href="javascript:void(0);"
@@ -86,6 +114,8 @@ const user = page.props.auth.user;
                         ><i class="icon-arr-right fs-12 text-secondary"></i
                     ></span>
                 </a>
+
+                <!-- Personal Information -->
                 <ul class="mt-16 pb-12 line-bt">
                     <li>
                         <Link
@@ -99,30 +129,34 @@ const user = page.props.auth.user;
                             ></span>
                         </Link>
                     </li>
-                    <li>
-                        <div
-                            class="mt-16 d-flex justify-content-between align-items-center"
-                        >
-                            <p class="text-small text-white">Email</p>
-                            <span
-                                class="text-secondary d-flex gap-8 align-items-center"
-                                >{{ user.email }}</span
+                    <ul style="max-height: 250px; overflow-y: scroll">
+                        <li>
+                            <div
+                                class="mt-16 d-flex justify-content-between align-items-center"
                             >
-                        </div>
-                    </li>
-                    <li v-for="(item, index) in user.info" :key="index">
-                        <div
-                            href="javascript:void(0);"
-                            class="mt-16 d-flex justify-content-between align-items-center"
-                        >
-                            <p class="text-small text-capitalize text-white">
-                                {{ index.replace("_", " ") }}
-                            </p>
-                            <span class="text-secondary text-nowrap">{{
-                                item
-                            }}</span>
-                        </div>
-                    </li>
+                                <p class="text-small text-white">Email</p>
+                                <span
+                                    class="text-secondary d-flex gap-8 align-items-center"
+                                    >{{ user.email }}</span
+                                >
+                            </div>
+                        </li>
+                        <li v-for="(item, index) in user.info" :key="index">
+                            <div
+                                href="javascript:void(0);"
+                                class="mt-16 d-flex justify-content-between align-items-center"
+                            >
+                                <p
+                                    class="text-small text-capitalize text-white"
+                                >
+                                    {{ index.replace("_", " ") }}
+                                </p>
+                                <span class="text-secondary text-nowrap">{{
+                                    item
+                                }}</span>
+                            </div>
+                        </li>
+                    </ul>
                 </ul>
                 <ul class="mt-16 pb-16 line-bt">
                     <li>
@@ -154,14 +188,8 @@ const user = page.props.auth.user;
                         </a>
                     </li>
                 </ul>
-                <span
-                    class="text-button mt-32 d-inline-block text-red fw-6"
-                    data-bs-toggle="modal"
-                    data-bs-target="#logout"
-                >
-                    Log out
-                </span>
             </div>
+            <div style="min-height: 100px"></div>
         </div>
     </AppLayout>
 </template>

@@ -47,13 +47,14 @@ const userStore = useUserStore();
                             <CoinImg :symbol="balance.asset.symbol" />
                             <div class="content">
                                 <div class="title">
-                                    <span class="text-secondary"
-                                        >Available Balance
+                                    <span class="text-large"
+                                        >{{ balance.asset.symbol }}
                                     </span>
-                                    <p class="mb-4 text-large">
-                                        {{ balance.asset.symbol }}&nbsp;{{
-                                            balance.amount
-                                        }}
+                                    <p class="text-large">
+                                        <span class="text-secondary"
+                                            >Available Balance:
+                                        </span>
+                                        &nbsp;{{ balance.amount }}
                                     </p>
                                 </div>
                                 <div class="box-price">

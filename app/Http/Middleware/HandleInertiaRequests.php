@@ -44,7 +44,7 @@ class HandleInertiaRequests extends Middleware
     {
         return array_merge(parent::share($request), [
             // Synchronously...
-            'routePrefix' => RequestHelper::getSubdomain($request) . '.',
+            'routePrefix' => RouteHelper::getRoutePrefix(),
             'isAdminDomain' => RequestHelper::isAdminDomain($request),
             'urlPrev' => RouteHelper::getPreviousUrl(),
             'tv' => config('vars.trading_view'),

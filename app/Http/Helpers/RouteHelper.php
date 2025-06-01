@@ -13,9 +13,13 @@ class RouteHelper
         }
     }
 
+    public static function is_adminDomain(): bool
+    {
+        return RequestHelper::isAdminDomain(request());
+    }
 
     public static function getRoutePrefix()
     {
-        return RequestHelper::getSubdomain(request()) . '.';
+        return RequestHelper::isAdminDomain(request()) ? config('vars.admin_subdomain') : config('vars.app_subdomain');
     }
 }

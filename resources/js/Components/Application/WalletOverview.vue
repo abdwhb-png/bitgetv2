@@ -5,7 +5,8 @@
 </style>
 
 <script setup>
-import { usePage, Link, router } from "@inertiajs/vue3";
+import { getCurrentInstance } from "vue";
+import { Link, router } from "@inertiajs/vue3";
 import { useUserStore } from "@/stores/user";
 import ConfirmPassword from "@/Components/Application/ConfirmPassword.vue";
 import { showLoadingToast } from "vant";
@@ -18,11 +19,11 @@ defineProps({
     },
 });
 
-const page = usePage();
+const instance = getCurrentInstance();
+const routePrefix = instance.appContext.config.globalProperties.$routePrefix;
 
 const userStore = useUserStore();
 
-const routePrefix = page.props.routePrefix;
 const buttons = [
     {
         name: "deposit",

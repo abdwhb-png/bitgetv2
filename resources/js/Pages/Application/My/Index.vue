@@ -1,21 +1,17 @@
+<style scoped>
+.tf-container {
+    margin-bottom: 16px;
+}
+</style>
+
 <script setup>
 import { Head, Link, usePage } from "@inertiajs/vue3";
 import { useUserStore } from "@/stores/user";
-import { showSuccessToast } from "vant";
 import SiteConfig from "@/Components/Application/SiteConfig.vue";
 
 const page = usePage();
 const user = page.props.auth.user;
 const userStore = useUserStore();
-
-async function changeMailNotif() {
-    await userStore.setMailNotif().then(() => {
-        showSuccessToast({
-            message: "Mail Notification Updated",
-            forbidClick: true,
-        });
-    });
-}
 </script>
 
 <template>
@@ -101,25 +97,6 @@ async function changeMailNotif() {
                 </div>
             </div>
 
-            <!--Mail Notif -->
-            <div class="bg-menuDark tf-container">
-                <div
-                    class="pt-12 pb-12 mt-4 d-flex justify-content-between align-items-center"
-                >
-                    <h5>Mail Notification</h5>
-                    <input
-                        class="tf-switch-check"
-                        type="checkbox"
-                        value="mail_notif"
-                        name="mail_notif"
-                        :checked="
-                            userStore.user?.account.mail == 1 ? true : false
-                        "
-                        @change="changeMailNotif"
-                    />
-                </div>
-            </div>
-
             <!-- Help Center -->
             <div class="bg-menuDark tf-container">
                 <div class="pt-12 pb-12 mt-4">
@@ -168,7 +145,6 @@ async function changeMailNotif() {
                     ></span>
                 </a>
             </div>
-            .mt-5
         </div>
     </AppLayout>
 </template>

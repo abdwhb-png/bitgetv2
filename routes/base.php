@@ -7,30 +7,34 @@ use App\Http\Controllers\SessionController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ProxyController;
 
-Route::get('/proxy/binance', [ProxyController::class, 'proxyToBinance']);
+function registerSharedRoutes($router, array $userResourceExcept = [])
+{
+    $router->get('/proxy/binance', [ProxyController::class, 'proxyToBinance']);
 
-Route::middleware('auth')->group(function () {
-    Route::post('/fatal-error', 'App\Http\Controllers\BaseController@fatalError')->name('fatal-error');
+    $router->middleware('auth')->group(function () use ($router) {
+        $router->post('/fatal-error', 'App\Http\Controllers\BaseController@fatalError')->name('fatal-error');
 
-    Route::resources([
-        'notification' => NotificationController::class,
-    ]);
-    Route::patch('/notifications', [NotificationController::class, 'markAllAsRead'])->name('notifications.read');
-    Route::delete('/notifications', [NotificationController::class, 'deleteAll'])->name('notifications.delete');
+        $router->resources([
+            'notification' => NotificationController::class,
+        ]);
+        $router->patch('/notifications', [NotificationController::class, 'markAllAsRead'])->name('notifications.read');
+        $router->delete('/notifications', [NotificationController::class, 'deleteAll'])->name('notifications.delete');
 
-    Route::prefix('user')->as('user.')->controller(UserController::class)->group(function () {
-        Route::put('/profile-photo', 'updateProfilePhoto')->name('profile-photo.update');
-        Route::put('/personal-info', 'updatePersonalInfo')->name('personal-info.update');
-        Route::put('/mail-notif', 'updateMailNotif')->name('mail-notif');
-        Route::put('/password/{user:email}', 'updatePassword')->name('password.update');
-        Route::delete('/{user:email}', 'destroy')->name('destroy');
+        $router->prefix('user')->as('user.')->controller(UserController::class)->group(function () use ($router) {
+            $router->put('/profile-photo', 'updateProfilePhoto')->name('profile-photo.update');
+            $router->put('/personal-info', 'updatePersonalInfo')->name('personal-info.update');
+            $router->put('/mail-notif', 'updateMailNotif')->name('mail-notif');
+            $router->put('/password/{user:email}', 'updatePassword')->name('password.update');
+            $router->delete('/{user:email}', 'destroy')->name('destroy');
+        });
+
+        $router->resource('user', UserController::class)->only([
+            'index',
+        ]);
+
+        $router->resource('session', SessionController::class)->only([
+            'index',
+            'destroy'
+        ]);
     });
-    Route::resource('user', UserController::class)->only([
-        'index',
-    ]);
-
-    Route::resource('session', SessionController::class)->only([
-        'index',
-        'destroy'
-    ]);
-});
+}

@@ -12,11 +12,11 @@
     background-color: darkgreen;
 }
 .van-popup.van-popup--round.van-popup--bottom {
-    height: 70%;
+    height: 80%;
 }
 @media screen and (min-width: 768px) {
     .van-popup.van-popup--round.van-popup--bottom {
-        height: 80%;
+        height: 70%;
         width: 50%;
         margin-left: 25%;
     }

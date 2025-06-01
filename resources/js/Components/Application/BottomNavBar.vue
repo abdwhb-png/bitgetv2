@@ -1,13 +1,9 @@
 <script setup>
-import { usePage, Link } from "@inertiajs/vue3";
+import { Link } from "@inertiajs/vue3";
 
 defineProps({
     navs: Array,
 });
-
-const page = usePage();
-
-const routePrefix = page.props.routePrefix;
 
 const reload = () => {
     window.location.reload();
@@ -32,7 +28,7 @@ const reload = () => {
                 v-for="(item, index) in navs"
                 :key="index"
                 :class="
-                    route().current(routePrefix + item.name) ? 'active' : ''
+                    route().current($routePrefix + item.name) ? 'active' : ''
                 "
             >
                 <a
@@ -45,7 +41,7 @@ const reload = () => {
                     <span class="text-capitalize">{{ item.name }}</span>
                 </a>
 
-                <Link v-else :href="route(routePrefix + item.name)">
+                <Link v-else :href="route($routePrefix + item.name)">
                     <i :class="'icon ' + item.icon"></i>
                     <span class="text-capitalize">{{ item.name }}</span>
                 </Link>

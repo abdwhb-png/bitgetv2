@@ -78,7 +78,7 @@ createInertiaApp({
         app.component("Modals", Modals);
 
         // create custom global app properties
-        const routePrefix = "app.";
+        const routePrefix = "";
         app.config.globalProperties.$routePrefix = routePrefix;
         localStorage.setItem("route_prefix", routePrefix);
 

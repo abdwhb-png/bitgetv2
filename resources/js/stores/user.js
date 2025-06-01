@@ -1,7 +1,10 @@
 import { defineStore, acceptHMRUpdate } from "pinia";
 import axios from "axios";
+import { usePage } from "@inertiajs/vue3";
 import { formatNotification } from "@/utils/helpers";
 import { showLoadingToast, showSuccessToast } from "vant";
+
+const page = usePage();
 
 export const useUserStore = defineStore("userStore", {
     state: () => ({
@@ -18,7 +21,7 @@ export const useUserStore = defineStore("userStore", {
             localStorage.getItem("default_coin_currency") || "USDT-TRC20",
         sessions: [],
         loading: false,
-        routePrefix: localStorage.getItem("route_prefix") || "app.",
+        routePrefix: page.props.routePrefix || "",
     }),
 
     getters: {
@@ -61,7 +64,7 @@ export const useUserStore = defineStore("userStore", {
     actions: {
         async fetchUser() {
             try {
-                const url = route("user.index");
+                const url = route(this.routePrefix + "user.index");
                 const response = await axios.get(url);
                 this.user = response.data.resource;
                 this.account = response.data.resource.account;
@@ -121,14 +124,14 @@ export const useUserStore = defineStore("userStore", {
         async fetchNotifications() {
             this.loading = true;
             this.notifications = [];
-            if (this.routePrefix === "app.") {
+            if (this.routePrefix !== "admin.") {
                 showLoadingToast({
                     message: "Notifications...",
                     duration: 500,
                 });
             }
             try {
-                const url = route("notification.index");
+                const url = route(this.routePrefix + "notification.index");
                 const response = await axios.get(url);
                 const data = response.data;
                 if (data.unread?.length) {
@@ -152,7 +155,7 @@ export const useUserStore = defineStore("userStore", {
 
         async readNotifications() {
             if (this.unreadCount === 0) return;
-            const url = route("notifications.read");
+            const url = route(this.routePrefix + "notifications.read");
             axios.patch(url).then(() => {
                 this.fetchNotifications();
                 this.unreadCount = 0;
@@ -165,7 +168,7 @@ export const useUserStore = defineStore("userStore", {
 
         async readNotification(id) {
             if (this.unreadCount === 0) return;
-            const url = route("notification.update", id);
+            const url = route(this.routePrefix + "notification.update", id);
             axios.put(url).then(() => {
                 this.unreadCount--;
                 this.fetchNotifications();
@@ -176,7 +179,7 @@ export const useUserStore = defineStore("userStore", {
 
         async deleteNotifications() {
             if (!this.hasNotifications) return;
-            const url = route("notifications.delete");
+            const url = route(this.routePrefix + "notifications.delete");
             axios.delete(url).then(() => {
                 this.fetchNotifications();
                 this.unreadCount = 0;
@@ -186,7 +189,7 @@ export const useUserStore = defineStore("userStore", {
         },
 
         async setMailNotif() {
-            const url = route("user.mail-notif");
+            const url = route(this.routePrefix + "user.mail-notif");
             axios.put(url).then(() => {
                 this.fetchUser();
             });
